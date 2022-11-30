@@ -25,6 +25,7 @@ var dashRoutes = [
     icon: <HomeIcon color="inherit" />,
     component: Dashboard,
     layout: "/admin",
+    protected: true,
   },
   {
     path: "/tables",
@@ -33,6 +34,7 @@ var dashRoutes = [
     icon: <StatsIcon color="inherit" />,
     component: Tables,
     layout: "/admin",
+    protected: true,
   },
   {
     path: "/billing",
@@ -41,6 +43,7 @@ var dashRoutes = [
     icon: <CreditIcon color="inherit" />,
     component: Billing,
     layout: "/admin",
+    protected: true,
   },
   {
     path: "/rtl-support-page",
@@ -64,6 +67,7 @@ var dashRoutes = [
         secondaryNavbar: true,
         component: Profile,
         layout: "/admin",
+        protected: true,
       },
       {
         path: "/signin",

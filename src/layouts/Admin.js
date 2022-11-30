@@ -11,6 +11,8 @@ import routes from 'routes.js';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+
+import { ProtectedRoute } from '../ProtectedRoute';
 // Custom Chakra theme
 import theme from 'theme/theme.js';
 import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
@@ -76,6 +78,9 @@ export default function Dashboard(props) {
 				return getRoutes(prop.views);
 			}
 			if (prop.layout === '/admin') {
+				if(prop.protected){
+					return <ProtectedRoute path={prop.layout + prop.path} component={prop.component} key={key} />
+				}
 				return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
 			} else {
 				return null;

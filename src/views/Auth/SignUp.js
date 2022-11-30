@@ -15,14 +15,48 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import BgSignUp from "assets/img/BgSignUp.png";
-import React from "react";
+import React, { useState } from "react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 
+import AuthApi from "../../api/auth";
+import { useAuth } from "../../auth-context/auth.context";
+import { useHistory } from "react-router-dom";
+
 function SignUp() {
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState("");
+
+  const history = useHistory();
+  const { user } = useAuth();
+
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
   const bgIcons = useColorModeValue("teal.200", "rgba(255, 255, 255, 0.5)");
+
+  const handleChange = e => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    AuthApi.Register(formData).then(response => {
+      if(response.data.success) {
+        return history.push("/auth/signin");
+      } else {
+        setError(response.data.msg)
+      }
+    }).catch(error => {
+      if (error.response) {
+        return setError(error.response.data.msg);
+      }
+      return setError("There has been an error.");
+    })
+  }
+
   return (
     <Flex
       direction='column'
@@ -66,6 +100,16 @@ function SignUp() {
         </Text>
       </Flex>
       <Flex alignItems='center' justifyContent='center' mb='60px' mt='20px'>
+        {user && user.token ? (
+          <Text
+            fontSize='xl'
+            color={textColor}
+            fontWeight='bold'
+            textAlign='center'
+            mb='22px'>
+              You are already signed in.
+          </Text>
+        ) : (
         <Flex
           direction='column'
           w='445px'
@@ -162,6 +206,8 @@ function SignUp() {
               placeholder='Your full name'
               mb='24px'
               size='lg'
+              name="username"
+              onChange={handleChange}
             />
             <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
               Email
@@ -174,6 +220,8 @@ function SignUp() {
               placeholder='Your email address'
               mb='24px'
               size='lg'
+              name="email"
+              onChange={handleChange}
             />
             <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
               Password
@@ -186,6 +234,8 @@ function SignUp() {
               placeholder='Your password'
               mb='24px'
               size='lg'
+              name="password"
+              onChange={handleChange}
             />
             <FormControl display='flex' alignItems='center' mb='24px'>
               <Switch id='remember-login' colorScheme='teal' me='10px' />
@@ -193,7 +243,18 @@ function SignUp() {
                 Remember me
               </FormLabel>
             </FormControl>
+            <Flex
+              flexDirection='column'
+              justifyContent='center'
+              alignItems='center'
+              maxW='100%'
+              mt='0px'>
+              <Text color="red" marginBottom="15px" fontWeight='medium'>
+                {error}
+              </Text>
+            </Flex>
             <Button
+              onClick={handleSubmit}
               type='submit'
               bg='teal.300'
               fontSize='10px'
@@ -223,13 +284,13 @@ function SignUp() {
                 color={titleColor}
                 as='span'
                 ms='5px'
-                href='#'
+                href='/auth/signin'
                 fontWeight='bold'>
                 Sign In
               </Link>
             </Text>
           </Flex>
-        </Flex>
+        </Flex>)}
       </Flex>
     </Flex>
   );
