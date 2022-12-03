@@ -29,8 +29,14 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import routes from "routes.js";
 
+import { useAuth } from "../../auth-context/auth.context";
+import AuthApi from "../../api/auth";
+import { useHistory } from "react-router-dom";
+
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const { user, setUser } = useAuth();
+  const history = useHistory();
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -44,6 +50,14 @@ export default function HeaderLinks(props) {
     mainText = "white";
   }
   const settingsRef = React.useRef();
+
+  const handleLogout = () => {
+    AuthApi.Logout(user)
+    setUser(null);
+    localStorage.removeItem("user");
+    return history.push("/auth/signin");
+  }
+
   return (
     <Flex
       pe={{ sm: "0px", md: "16px" }}
@@ -93,6 +107,32 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
       </InputGroup>
+      {user && user.token ? (
+      <Button
+        ms="0px"
+        px="0px"
+        onClick={handleLogout}
+        me={{ sm: "2px", md: "16px" }}
+        color={navbarIcon}
+        variant="transparent-with-icon"
+        rightIcon={
+          document.documentElement.dir ? (
+            ""
+          ) : (
+            <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+          )
+        }
+        leftIcon={
+          document.documentElement.dir ? (
+            <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+          ) : (
+            ""
+          )
+        }
+      >
+        <Text display={{ sm: "none", md: "flex" }}>Logout</Text>
+      </Button>
+      ) : (
       <NavLink to="/auth/signin">
         <Button
           ms="0px"
@@ -118,6 +158,7 @@ export default function HeaderLinks(props) {
           <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
         </Button>
       </NavLink>
+      ) }
       <SidebarResponsive
         logoText={props.logoText}
         secondary={props.secondary}

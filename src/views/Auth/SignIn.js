@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // Chakra imports
 import {
   Box,
@@ -16,10 +16,51 @@ import {
 // Assets
 import signInImage from "assets/img/signInImage.png";
 
+import AuthApi from "../../api/auth";
+import { useAuth } from "../../auth-context/auth.context";
+import { useHistory } from "react-router-dom";
+
 function SignIn() {
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState("");
+
+  const history = useHistory();
+  const { user, setUser } = useAuth();
   // Chakra color mode
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
+
+  const handleChange = e => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    AuthApi.Login(formData).then(response => {
+      if(response.data.success) {
+        return setProfile(response);
+      } else {
+        setError(response.data.msg)
+      }
+    }).catch(error => {
+      if (error.response) {
+        return setError(error.response.data.msg);
+      }
+      return setError("There has been an error.");
+    })
+  }
+
+  const setProfile = (response) => {
+    let user = { ...response.data.user };
+    user.token = response.data.token;
+    user = JSON.stringify(user);
+    setUser(user);
+    localStorage.setItem("user", user);
+    return history.push("/dashboard");
+  };
   return (
     <Flex position='relative' mb='40px'>
       <Flex
@@ -30,6 +71,24 @@ function SignIn() {
         justifyContent='space-between'
         mb='30px'
         pt={{ sm: "100px", md: "0px" }}>
+        {user && user.token ? (
+        <Flex
+          alignItems='center'
+          justifyContent='start'
+          style={{ userSelect: "none" }}
+          w={{ base: "100%", md: "50%", lg: "42%" }}>
+          <Flex
+            direction='column'
+            w='100%'
+            background='transparent'
+            p='48px'
+            mt={{ md: "150px", lg: "80px" }}>
+            <Heading color={titleColor} fontSize='32px' mb='10px'>
+              You are already signed in.
+            </Heading>
+          </Flex>
+        </Flex>
+        ) : (
         <Flex
           alignItems='center'
           justifyContent='start'
@@ -63,6 +122,8 @@ function SignIn() {
                 type='text'
                 placeholder='Your email adress'
                 size='lg'
+                onChange={handleChange}
+                name="email"
               />
               <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
                 Password
@@ -74,6 +135,8 @@ function SignIn() {
                 type='password'
                 placeholder='Your password'
                 size='lg'
+                onChange={handleChange}
+                name="password"
               />
               <FormControl display='flex' alignItems='center'>
                 <Switch id='remember-login' colorScheme='teal' me='10px' />
@@ -85,7 +148,18 @@ function SignIn() {
                   Remember me
                 </FormLabel>
               </FormControl>
+              <Flex
+                flexDirection='column'
+                justifyContent='center'
+                alignItems='center'
+                maxW='100%'
+                mt='0px'>
+                <Text color="red" marginTop="10px" fontWeight='medium'>
+                  {error}
+                </Text>
+              </Flex>
               <Button
+                onClick={handleSubmit}
                 fontSize='10px'
                 type='submit'
                 bg='teal.300'
@@ -111,13 +185,13 @@ function SignIn() {
               mt='0px'>
               <Text color={textColor} fontWeight='medium'>
                 Don't have an account?
-                <Link color={titleColor} as='span' ms='5px' fontWeight='bold'>
+                <Link color={titleColor} href="/auth/signup" as='span' ms='5px' fontWeight='bold'>
                   Sign Up
                 </Link>
               </Text>
             </Flex>
           </Flex>
-        </Flex>
+        </Flex>)}
         <Box
           display={{ base: "none", md: "block" }}
           overflowX='hidden'
