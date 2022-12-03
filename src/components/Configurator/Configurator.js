@@ -144,7 +144,7 @@ export default function Configurator(props) {
                 </Text>
                 <Box>
                   <Link
-                    href="https://www.creative-tim.com/product/purity-ui-dashboard"
+                    href="https://appseed.us/product/purity-dashboard/api-server-nodejs/react/"
                     w="100%"
                     mb="16px"
                   >
@@ -161,7 +161,7 @@ export default function Configurator(props) {
                     </Button>
                   </Link>
                   <Link
-                    href="https://demos.creative-tim.com/docs-purity-ui-dashboard/"
+                    href="https://github.com/app-generator/react-purity-dashboard"
                     w="100%"
                   >
                     <Button
@@ -186,7 +186,7 @@ export default function Configurator(props) {
                   mb="16px"
                 >
                   <GitHubButton
-                    href="https://github.com/creativetimofficial/purity-ui-dashboard"
+                    href="https://github.com/app-generator/react-purity-dashboard"
                     data-icon="octicon-star"
                     data-show-count="true"
                     aria-label="Star creativetimofficial/purity-ui-dashboard on GitHub"

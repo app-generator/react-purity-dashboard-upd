@@ -27,16 +27,11 @@ export default function Footer(props) {
         }}
         mb={{ base: "20px", xl: "0px" }}
       >
-        &copy; {1900 + new Date().getYear()},{" "}
-        <Text as="span">
-          {document.documentElement.dir === "rtl"
-            ? " مصنوع من ❤️ بواسطة"
-            : "Made with ❤️ by "}
-        </Text>
+        &copy;
         <Link
           // color={linkTeal}
           color="teal.400"
-          href="https://www.creative-tim.com"
+          href="https://www.creative-tim.com?AFFILIATE=128200"
           target="_blank"
         >
           {document.documentElement.dir === "rtl"
@@ -63,7 +58,7 @@ export default function Footer(props) {
             md: "44px",
           }}
         >
-          <Link color="gray.400" href="https://www.creative-tim.com">
+          <Link color="gray.400" href="https://www.creative-tim.com?AFFILIATE=128200">
             {document.documentElement.dir === "rtl"
               ? "توقيت الإبداعية"
               : "Creative Tim"}
@@ -88,7 +83,7 @@ export default function Footer(props) {
           <Link
             color="gray.400"
             href="#blog"
-            href="https://creative-tim.com/blog"
+            href="https://creative-tim.com/blog?AFFILIATE=128200"
           >
             {document.documentElement.dir === "rtl" ? "مدونة" : "Blog"}
           </Link>
@@ -97,7 +92,7 @@ export default function Footer(props) {
           <Link
             color="gray.400"
             href="#license"
-            href="https://www.creative-tim.com/license"
+            href="https://www.creative-tim.com/license?AFFILIATE=128200"
           >
             {document.documentElement.dir === "rtl" ? "رخصة" : "License"}
           </Link>
